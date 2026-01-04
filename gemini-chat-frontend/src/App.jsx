@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import ChatInput from './components/ChatInput'
 import ChatResponse from './components/ChatResponse'
+import { fetchChatResponse } from './services/api';
 
 function App() {
   const [response, setResponse] = useState(null);
@@ -11,7 +12,8 @@ function App() {
     setLoading(true);
     setResponse(null);
     try {
-      // await
+      const apiResponse = await fetchChatResponse(question);
+      setResponse(apiResponse);
     } catch (error) {
       alert("Failed to get response")
     } finally {
@@ -19,13 +21,18 @@ function App() {
     }
   }
 
+  // if (loading) {
+  //   return (<h1>Loading...</h1>);
+  // }
+
   return (
     <div className='App'>
       <header className='bg-primary text-white text-center py-4'>
         <h1>Gemini ChatBot</h1>
       </header>
       <ChatInput onSubmit={handleQuestionSubmit}/>
-        <ChatResponse response/>
+      {loading && <h1>Loading...</h1>}
+        <ChatResponse response={response }/>
       {/* RESPONSE */}
     </div>
   )
